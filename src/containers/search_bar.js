@@ -1,0 +1,52 @@
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {fetchWeather} from '../actions/index';
+import { Link } from 'react-router';
+import WeatherList from '../containers/weather_list';
+
+
+class SearchBar extends Component{
+    constructor(props){
+        super(props);
+
+        this.state = {term : ''};
+        this.onInputChange = this.onInputChange.bind(this);
+        this.onFormSubmit = this.onFormSubmit.bind(this);
+
+    }
+
+    onInputChange(event){
+        this.setState({term : event.target.value});
+    }
+
+    onFormSubmit(event){
+        event.preventDefault();
+        this.props.fetchWeather(this.state.term);
+         this.setState({term : ''});
+    }
+
+    render(){
+        return(
+            <div>
+                <form onSubmit = {this.onFormSubmit} className="form-inline">
+                <input placeholder="Get five-day forecast in your fav cities"
+                        className="form-control" 
+                        value = {this.state.term} 
+                        onChange = {this.onInputChange}/>
+                <span>
+                    <button type="submit" className="btn btn-secondary">Submit</button>
+                </span>
+            </form>
+            <WeatherList />
+            </div>
+             
+        );
+    }
+}
+
+function mapDispatchToProps(dispatch){
+    return bindActionCreators({fetchWeather}, dispatch);
+}
+
+export default connect(null, mapDispatchToProps)(SearchBar);
